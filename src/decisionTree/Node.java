@@ -1,5 +1,11 @@
+package decisionTree;
+
 import java.util.ArrayList;
 import java.util.List;
+
+/*
+ * Node class to be utilized to construct a tree.
+ */
 
 public class Node<T> {
     private List<Node<T>> children = new ArrayList<Node<T>>();
@@ -73,7 +79,16 @@ public class Node<T> {
     public boolean isRoot() {
         return (this.parent == null);
     }
-
+    
+    public boolean isChildLeaf(){
+    	for(Node<T> child : children){
+    		if(child.isLeaf()){
+    			return true;
+    		}
+    	}
+    	
+    	return false;
+    }
     public boolean isLeaf() {
         if(this.children.size() == 0) 
             return true;
