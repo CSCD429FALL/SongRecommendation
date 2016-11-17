@@ -1,5 +1,6 @@
 # spandora
-ToDo: 
+
+ToDo:<br> 
     *Make the results more accurate by adding the tags from the tags tables. 
     
     *Creating biased users, since randomly generating ratings for songs will just create a random tree structure.
