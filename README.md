@@ -1,8 +1,8 @@
 # spandora
-Each Directory is a different algorithm.
-You can add yours by creating a new folder and placing all files in there.
-
-Please create another branch and do all work there. Then we can merge once 
-we know it is safe.
-
-There will be a main project folder where we will integrate all pieces together.
+ToDo: 
+    *Make the results more accurate by adding the tags from the tags tables. 
+    
+    *Creating biased users, since randomly generating ratings for songs will just create a random tree structure.
+     So maybe a user more into rock, one more into pop etc.
+    
+    *Retrieve the most fitting subsets and return it as a playlist or further filter it down then randomly select one and return just the       one song.
