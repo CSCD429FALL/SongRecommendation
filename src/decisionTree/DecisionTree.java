@@ -3,8 +3,6 @@ package decisionTree;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.sun.xml.internal.bind.v2.schemagen.xmlschema.AttributeType;
-
 public class DecisionTree {
 
 	private Node<String[][]> root;//root node of the decision tree

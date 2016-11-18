@@ -20,7 +20,7 @@ public class Tester {
 	public static void main(String[] args) throws IOException {
 		
 		
-		//Third argument defines how many tuples to read, defining a value larger than the number of total tuples
+		//Second argument defines how many tuples to read, defining a value larger than the number of total tuples
 		//in data will default to max tuples in data.
 		String[][] songs = loadTable("/CSV/songs.csv",100000, new int[NUMBER_OF_ATTRIBUTES]);
 		
