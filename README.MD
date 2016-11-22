@@ -9,5 +9,5 @@ ToDo:
       
 To run:
 
-*Make sure you add the preprocessor to the build path, as well as mysqlconnector jar file. Both of the jars are in the libs folder.
+*Make sure you add the preprocessor to the build path, as well as mysqlconnector jar file. Both of the jars are in the libs folder. Also add the data folder inside src to the build path.
 
