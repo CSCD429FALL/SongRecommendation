@@ -3,7 +3,7 @@ package decisionTree;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.sun.xml.internal.bind.v2.schemagen.xmlschema.AttributeType;
+import org.omg.CORBA.SystemException;
 
 public class DecisionTree {
 
@@ -63,9 +63,36 @@ public class DecisionTree {
 				printTree(n);
 			}
 		}
-		
+
 	}
-	
+
+	public void printTreeLeafSubsets(){
+		printTreeLeafSubsets(root);
+	}
+
+	private void printTreeLeafSubsets(Node<String[][]> N){
+		
+		if(N.isLeaf()){
+			String[][] subset = N.getData();
+			for(String[] row : subset){
+				System.out.println(N.getParentLabel() + " leaf :" + N.getLabel() + "->" + row[0] + ", " + row[1] + ", " +row[2] + ", " + row[4]);
+				
+			}
+			
+			System.out.println();
+		}
+
+
+		if(!N.isLeaf()){
+			for(Node<String[][]> n: N.getChildren()){
+				printTreeLeafSubsets(n);
+			}
+		}
+
+
+
+	}
+
 	public String predict(String[] tuple){
 		return predict(tuple, root);
 	}
@@ -114,8 +141,10 @@ public class DecisionTree {
 		 */
 		String classLabel = sameClass(D);
 		if(classLabel != null){
-
-			N.setLabel(classLabel);
+			
+			String mc = getMajorityClass(D);
+			
+			N.setLabel(mc);
 			return N;
 		}
 
@@ -125,7 +154,10 @@ public class DecisionTree {
 		 */
 
 		if(attribute_list.isEmpty() || (attribute_list.size() == 1 && attribute_list.containsKey(classKey))){
-			N.setLabel(getMajorityClass(D));
+			
+			String mc = getMajorityClass(D);
+
+			N.setLabel(mc);
 			//System.out.println("attr list empty class label:" + getMajorityClass(D));
 			return N;
 		}
@@ -156,8 +188,11 @@ public class DecisionTree {
 				 * If subset is empty then attach a leaf node labeled with the majority class of D.
 				 */
 				if(subset.length == 0){
-					Node<String[][]> leaf = new Node<String[][]>(new String[0][0]);
-					leaf.setLabel(getMajorityClass(D));
+					String mc = getMajorityClass(D);
+
+
+					Node<String[][]> leaf = new Node<>(getSubset(D, classKey, mc));
+					leaf.setLabel(mc);
 					//System.out.println("subset length 0:" + getMajorityClass(D));
 					N.addChild(leaf);
 				}
@@ -182,8 +217,11 @@ public class DecisionTree {
 				 * If subset is empty then attach a leaf node labeled with the majority class of D.
 				 */
 				if(subset.length == 0){
-					Node<String[][]> leaf = new Node<String[][]>(new String[0][0]);
-					leaf.setLabel(getMajorityClass(D));
+					String mc = getMajorityClass(D);
+
+
+					Node<String[][]> leaf = new Node<>(getSubset(D, classKey, mc));
+					leaf.setLabel(mc);
 					//System.out.println("subset length 0:" + getMajorityClass(D));
 					N.addChild(leaf);
 				}
@@ -355,7 +393,10 @@ public class DecisionTree {
 		HashMap<String, Integer> values = new HashMap<>();
 		String key = "";
 
+
+
 		for(int i = 0; i < D.length; i++){
+
 
 			if(Double.parseDouble(D[i][attr]) <= seperatingValue){
 				key = "<= " + seperatingValue;
@@ -372,6 +413,8 @@ public class DecisionTree {
 			}
 
 		}
+
+
 
 		return values;
 	}
