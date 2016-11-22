@@ -3,6 +3,8 @@ package decisionTree;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.omg.CORBA.SystemException;
+
 public class DecisionTree {
 
 	private Node<String[][]> root;//root node of the decision tree
@@ -353,23 +355,31 @@ public class DecisionTree {
 		HashMap<String, Integer> values = new HashMap<>();
 		String key = "";
 
-		for(int i = 0; i < D.length; i++){
+		String cur = "";
+		try{
+			
+			for(int i = 0; i < D.length; i++){
+				cur = D[i][attr];
+				if(Double.parseDouble(D[i][attr]) <= seperatingValue){
+					key = "<= " + seperatingValue;
+				}
+				else if(Double.parseDouble(D[i][attr]) > seperatingValue){
+					key = "> " + seperatingValue;			
+				}
 
-			if(Double.parseDouble(D[i][attr]) <= seperatingValue){
-				key = "<= " + seperatingValue;
-			}
-			else if(Double.parseDouble(D[i][attr]) > seperatingValue){
-				key = "> " + seperatingValue;			
-			}
+				if(values.containsKey(key)){
+					values.put(key, values.get(key) + 1);
+				}
+				else{
+					values.put(key, 1);
+				}
 
-			if(values.containsKey(key)){
-				values.put(key, values.get(key) + 1);
 			}
-			else{
-				values.put(key, 1);
-			}
-
+		}catch(Exception e){
+			System.out.println(e.getMessage() + " " + cur);
+			System.exit(0);
 		}
+		
 
 		return values;
 	}
