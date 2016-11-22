@@ -22,7 +22,7 @@ public class Tester {
 
 		//Second argument defines how many tuples to read, defining a value larger than the number of total tuples
 		//in data will default to max tuples in data.
-		String[][] songs = loadTable("/CSV/test.csv",100, new int[NUMBER_OF_ATTRIBUTES]);
+		String[][] songs = loadTable("/test.csv",100, new int[NUMBER_OF_ATTRIBUTES]);
 
 		
 		HashMap<Integer,String> attributeList = new HashMap<>();
