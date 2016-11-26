@@ -8,5 +8,9 @@ ToDo:
       
 To run:
 
+<<<<<<< HEAD
 *Make sure you add the sqlite-jdbc-3.15.1.jar in the libs folder to the build path, as well as src/data folder as a resource folder.
+=======
+*Make sure you add the preprocessor to the build path, as well as mysqlconnector jar file. Both of the jars are in the libs folder. Also add the data folder inside src to the build path.
+>>>>>>> refs/remotes/origin/master
 
