@@ -2,19 +2,18 @@ package decisionTree;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 import org.omg.CORBA.SystemException;
 
 public class DecisionTree {
 
-	private Node<String[][]> root;//root node of the decision tree
-	private String[][] D;//data set
-
-	//attributeList contains index of its corresponding attribute value as the key
+	private Node<String[][]> root;
+	private String[][] D;
 	private HashMap<Integer, String> attributeList;
-	boolean[] discreteValued;//false if its continuous.
+	private boolean[] discreteValued;//false if its continuous.
 
-	/*
+	/**
 	 * seperatingValues
 	 * each row is each attribute that is continuous,
 	 * and each column for each row is a a split point
@@ -33,14 +32,14 @@ public class DecisionTree {
 	public DecisionTree(String[][] D, HashMap<Integer, String> attributeList, int classKey,
 			boolean[] discreteValued, double[] seperatingValues){
 		this.D = D;
-		this.attributeList = attributeList;
 		this.classKey = classKey;
+		this.attributeList = attributeList;
 		this.discreteValued = discreteValued;
 		this.seperatingValues = seperatingValues;
 		root = generateDecisionTree(D, attributeList);
 	}
 
-	/*
+	/**
 	 * Prints the given tree with root node @param N.
 	 */
 
@@ -66,6 +65,9 @@ public class DecisionTree {
 
 	}
 
+	/**
+	 * Prints the subsets in each leaf.
+	 */
 	public void printTreeLeafSubsets(){
 		printTreeLeafSubsets(root);
 	}
@@ -90,6 +92,75 @@ public class DecisionTree {
 		}
 
 
+
+	}
+	
+	/**
+	 * Suggest an item in the data set based on the input tuple.
+	 * 
+	 */
+	public String[] suggestItem(String[] origin){
+		return suggestItem(root, origin);
+	}
+	
+	private String[] suggestItem(Node<String[][]> N, String[] origin){
+		
+		Node<String[][]> cur = N;
+		
+		if(!N.isLeaf() && N.hasLabelIndex()){
+			
+			int curIndex = N.getLabelIndex();
+			String value = origin[curIndex];
+			
+			for(Node<String[][]> child : N.getChildren()){
+				if(child.getLabelValue().equals(value)){
+					cur = child;
+				}
+			}
+			
+		}
+		
+		if(N.isLeaf()){
+			String[][] subset = N.getData();
+			Random r = new Random();
+			
+			int randomIndex = r.nextInt(subset.length - 1);
+			
+			return subset[randomIndex];
+			
+			
+		}
+		
+		if(!N.isLeaf()){
+			suggestItem(cur, origin);
+		}
+		
+		return null;
+
+	}
+	
+	/**
+	 * Prints a friendly visual representation of the
+	 * tree structure.
+	 */
+	public void printTreeStructure(){
+		printTreeStructure(root);
+	}
+	private void printTreeStructure(Node<String[][]> N){
+		
+		if(N.isRoot()){
+			System.out.println(N.getLabel());
+		}
+		else {
+			System.out.println(N.getParentLabel() + " -> " + N.getLabelValue() + " -> " + N.getLabel());
+		}
+
+
+		if(!N.isLeaf()){
+			for(Node<String[][]> n: N.getChildren()){
+				printTreeStructure(n);
+			}
+		}
 
 	}
 
