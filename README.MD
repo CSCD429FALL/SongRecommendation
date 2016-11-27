@@ -1,9 +1,9 @@
-# spandora
+# Song Recommendation
 
 ToDo:
 
-1. Generate our accuracy.
-2. Creating biased users, since randomly generating ratings for songs will just create a random tree structure. So maybe a user more into rock, one more into pop etc. As well as last lisented to date. This will help us avoid a song being suggested back to back. Help trim down the similar subsets.
+1. Implement the ability to split continous attributes in a more robust way. 
+2. Take the tag information from the original Million song data set and split it into multiple columns. Remove duplicates such as same tag but with different symbols, or spelled differently.
 
       
 To run:
