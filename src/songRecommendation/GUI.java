@@ -1,4 +1,4 @@
-package spandora;
+package songRecommendation;
 
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
@@ -96,10 +96,10 @@ public class GUI implements ActionListener{
 	 */
 	private void initialize() throws IOException {
 
-		 System.out.println("Loading test data set.");
+		 System.out.println("Loading test data set...");
 		 String[][] test = FileOpener.loadTable("/test.csv", 10);
 		 
-		 System.out.println("Loading train data set.");
+		 System.out.println("Loading train data set...");
 		 String[][] train = FileOpener.loadTable("/train.csv", NUMBER_OF_ATTRIBUTES);
 		 
 		 HashMap<Integer,String> attributeList = new HashMap<>();
@@ -117,7 +117,7 @@ public class GUI implements ActionListener{
 		
 		 double[] seperatingValues = new double[NUMBER_OF_ATTRIBUTES];
 
-		 System.out.println("Generating decision tree from train set.");
+		 System.out.println("Generating decision tree from train set...");
 		 decisionTree = new DecisionTree(train, attributeList, GENRE,
 				 	discreteValued, seperatingValues);
 

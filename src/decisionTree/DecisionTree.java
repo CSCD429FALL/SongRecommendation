@@ -1,5 +1,6 @@
 package decisionTree;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -501,5 +502,5 @@ public class DecisionTree {
 
 		return curClassValue;
 	}
-
+	
 }

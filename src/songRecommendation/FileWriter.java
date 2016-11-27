@@ -1,4 +1,4 @@
-package spandora;
+package songRecommendation;
 
 import java.io.PrintWriter;
 
