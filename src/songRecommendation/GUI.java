@@ -229,7 +229,7 @@ public class GUI implements ActionListener{
 			while (rs.next() && results < MAXRESULTS) {
 
 
-				resultArray.add(rs.getString("title") + "," + rs.getString("artist_name") + "," + rs.getString("release") + ","  + 
+				resultArray.add(rs.getString("title") + "," + rs.getString("artist_name") + ","  + 
 						 rs.getString("genre") + "," + rs.getInt("year"));
 				retrieveArray.add(rs.getString("track_id"));
 				++results;
