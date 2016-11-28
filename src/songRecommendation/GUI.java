@@ -44,6 +44,7 @@ public class GUI implements ActionListener{
 
 	private JComboBox<Object> comboBox;
 	private JTextArea txtCurrentTrack;
+	private JButton btnNext;
 	private JFrame frame;
 	private JTextField txtSearch;
 	private static int MAXRESULTS = 20;
@@ -78,6 +79,7 @@ public class GUI implements ActionListener{
 		initialize();
 		
 		comboBox.addActionListener(this);
+		btnNext.addActionListener(this);
 		txtSearch.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent ke) {
 				SwingUtilities.invokeLater(new Runnable() {
@@ -201,6 +203,10 @@ public class GUI implements ActionListener{
 		txtpnSuggestedTrack.setText("Suggested Track:");
 		txtpnSuggestedTrack.setBounds(35, 87, 140, 20);
 		frame.getContentPane().add(txtpnSuggestedTrack);
+		
+		btnNext = new JButton("Next");
+		btnNext.setBounds(307, 167, 89, 23);
+		frame.getContentPane().add(btnNext);
 
 
 		txtSearch = (JTextField) comboBox.getEditor().getEditorComponent();
