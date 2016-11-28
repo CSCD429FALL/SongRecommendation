@@ -68,25 +68,36 @@ public class DecisionTree {
 	 * Prints the subsets in each leaf.
 	 */
 	public void printTreeLeafSubsets() {
-		printTreeLeafSubsets(root);
+		printTreeLeafSubsets(root, "");
 	}
 
-	private void printTreeLeafSubsets(Node<String[][]> N) {
+	private void printTreeLeafSubsets(Node<String[][]> N, String path) {
 
 		if (N.isLeaf()) {
 			String[][] subset = N.getData();
+
 			for (String[] row : subset) {
-				System.out.println(N.getParentLabel() + " leaf :" + N.getLabel() + "->" + row[0] + ", " + row[1] + ", "
-						+ row[2] + ", " + row[4]);
+				System.out.println(path + row[1] + ", " + row[2] + ", " + row[4] + ", " + row[9]);
 
 			}
 
 			System.out.println();
 		}
-
+		if(N.isRoot()){
+			path += N.getLabel() + "->";
+		}
 		if (!N.isLeaf()) {
 			for (Node<String[][]> n : N.getChildren()) {
-				printTreeLeafSubsets(n);
+				String newPath =  path;
+				if(!n.isLeaf()){
+					newPath += "[" + n.getLabelValue() + "]->" + n.getLabel();
+				}
+				else{
+					newPath += "[" + n.getLabelValue() + "]->";
+				}
+
+
+				printTreeLeafSubsets(n, newPath);
 			}
 		}
 
@@ -96,20 +107,21 @@ public class DecisionTree {
 	 * Suggest an item in the data set based on the input tuple.
 	 * 
 	 */
-	public String[] suggestItem(String[] origin) {
-		return suggestItem(origin, root);
+	public String[][] suggestItems(String[] origin) {
+		return suggestItems(origin, root);
 	}
 
-	private String[] suggestItem(String[] origin, Node<String[][]> N) {
+	private String[][] suggestItems(String[] origin, Node<String[][]> N) {
 
+		if(N == null){
+			return null;
+		}
 		if (N.isLeaf()) {
 			String[][] subset = N.getData();
 
-			Random r = new Random();
-			System.out.println(subset.length);
-			int randomIndex = r.nextInt(((subset.length - 1) - 0) + 1) - 0;
 
-			return subset[randomIndex];
+
+			return subset;
 		}
 
 		int curAttribute = -1;
@@ -120,17 +132,43 @@ public class DecisionTree {
 		}
 		Node<String[][]> curNode = null;
 
-		for (Node<String[][]> child : N.getChildren()) {
-			if (child.getLabelValue().equals(origin[curAttribute])) {
-				curNode = child;
-				break;
+		if(discreteValued[curAttribute]){
+			for (Node<String[][]> child : N.getChildren()) {
+
+
+				if (child.getLabelValue().equals(origin[curAttribute])) {
+					curNode = child;
+					break;
+				}
+
+
 			}
 		}
-		if (curNode == null) {
-			curNode = N.getChildren().get(0);
+		else{
+			for (Node<String[][]> child : N.getChildren()) {
+
+				if (child.getLabelValue().substring(0, 3).equals("le:")) {
+					if(Double.parseDouble(origin[curAttribute]) <= seperatingValues[curAttribute]){
+						curNode = child;
+						break;
+					}
+
+				}
+				else if (child.getLabelValue().substring(0, 3).equals("gt:")) {
+					if(Double.parseDouble(origin[curAttribute]) > seperatingValues[curAttribute]){
+						curNode = child;
+						break;
+					}
+
+				}
+
+
+			}
 		}
 
-		return suggestItem(origin, curNode);
+
+		
+		return suggestItems(origin, curNode);
 
 	}
 
@@ -138,20 +176,31 @@ public class DecisionTree {
 	 * Prints a friendly visual representation of the tree structure.
 	 */
 	public void printTreeStructure() {
-		printTreeStructure(root);
+		printTreeStructure(root, "");
 	}
 
-	private void printTreeStructure(Node<String[][]> N) {
+	private void printTreeStructure(Node<String[][]> N, String path) {
 
-		if (N.isRoot()) {
-			System.out.println(N.getLabel());
-		} else if (!N.isLeaf()) {
-			System.out.println(N.getParentLabel() + " -> " + N.getLabelValue() + " -> " + N.getLabel());
+		if (N.isLeaf()) {
+
+			System.out.println(path);
+
 		}
-
+		if(N.isRoot()){
+			path += N.getLabel() + "->";
+		}
 		if (!N.isLeaf()) {
 			for (Node<String[][]> n : N.getChildren()) {
-				printTreeStructure(n);
+				String newPath =  path;
+				if(!n.isLeaf()){
+					newPath += "[" + n.getLabelValue() + "]->" + n.getLabel();
+				}
+				else{
+					newPath += "[" + n.getLabelValue() + "]->";
+				}
+
+
+				printTreeStructure(n, newPath);
 			}
 		}
 
@@ -213,7 +262,7 @@ public class DecisionTree {
 		 * SECOND TERMINATING CONDITION If attribute_list is empty
 		 */
 
-		if (attribute_list.isEmpty() || (attribute_list.size() == 1 && attribute_list.containsKey(classKey))) {
+		if (attribute_list.isEmpty()) {
 
 			String mc = getMajorityClass(D);
 			N.setLabel(mc);
@@ -236,10 +285,14 @@ public class DecisionTree {
 		// Checking if split attribute is discrete or continuous.
 		if (discreteValued[splitCriterion.getKey()]) {
 			splitValues = getValues(N.getData(), splitCriterion.getKey());
-			HashMap<Integer, String> newAttList = attribute_list;
+			HashMap<Integer, String> newAttList = new HashMap<Integer, String>(attribute_list);
 			newAttList.remove(splitCriterion.getKey());
 
+
+
 			for (HashMap.Entry<String, Integer> e : splitValues.entrySet()) {
+
+			
 				String[][] subset = getSubset(D, splitCriterion.getKey(), e.getKey());
 				/*
 				 * THIRD TERMINATING CONDITION If subset is empty then attach a
@@ -250,15 +303,16 @@ public class DecisionTree {
 
 					Node<String[][]> leaf = new Node<>(getSubset(D, classKey, mc));
 					leaf.setLabel(mc);
-					// System.out.println("subset length 0:" +
-					// getMajorityClass(D));
-					N.addChild(leaf);
+
+					N.addChild(leaf, e.getKey());
+
+
 				} else {
 					N.addChild(generateDecisionTree(subset, newAttList), e.getKey());
 				}
 			}
 		} else {
-			HashMap<Integer, String> newAttList = attribute_list;
+			HashMap<Integer, String> newAttList = new HashMap<Integer, String>(attribute_list);
 			newAttList.remove(splitCriterion.getKey());
 
 			// going through all 3 branching criteria
@@ -272,6 +326,12 @@ public class DecisionTree {
 				 * THIRD TERMINATING CONDITION If subset is empty then attach a
 				 * leaf node labeled with the majority class of D.
 				 */
+				String label = "";
+				if (i == 0) {
+					label = "le:";
+				} else {
+					label = "gt:";
+				}
 				if (subset.length == 0) {
 					String mc = getMajorityClass(D);
 
@@ -279,15 +339,11 @@ public class DecisionTree {
 					leaf.setLabel(mc);
 					// System.out.println("subset length 0:" +
 					// getMajorityClass(D));
-					N.addChild(leaf);
+					N.addChild(leaf, label + seperatingValue);
+
 				} else {
-					String label = "";
-					if (i == 0) {
-						label = "<=";
-					} else {
-						label = ">";
-					}
-					N.addChild(generateDecisionTree(subset, newAttList), label + " " + seperatingValue);
+
+					N.addChild(generateDecisionTree(subset, newAttList), label+ seperatingValue);
 				}
 			}
 
@@ -502,5 +558,5 @@ public class DecisionTree {
 
 		return curClassValue;
 	}
-	
+
 }
