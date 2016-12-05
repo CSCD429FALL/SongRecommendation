@@ -108,11 +108,11 @@ public class GUI implements ActionListener{
 	 */
 	private void initialize() throws IOException, ClassNotFoundException, SQLException {
 
-//		 System.out.println("Loading test data set...");
-//		 String[][] test = FileOpener.loadTable("/test.csv", 10);
+		 System.out.println("Loading test data set...");
+		 String[][] test = FileOpener.loadTable("/test.csv", NUMBER_OF_ATTRIBUTES);
 		 
 		 System.out.println("Loading train data set...");
-		 String[][] train = FileOpener.loadTable("/complete.csv", NUMBER_OF_ATTRIBUTES);
+		 String[][] train = FileOpener.loadTable("/train.csv", NUMBER_OF_ATTRIBUTES);
 		 
 		 HashMap<Integer,String> attributeList = new HashMap<>();
 		
@@ -132,10 +132,10 @@ public class GUI implements ActionListener{
 
 		
 		 double[] seperatingValues = new double[NUMBER_OF_ATTRIBUTES];
-		 seperatingValues[YEAR] = 2000;
-		 seperatingValues[ARTIST_FAMILIARITY] = .7;
-		 seperatingValues[ARTIST_HOTNESS] = .7;
-		 seperatingValues[DURATION] = 240;
+		 seperatingValues[YEAR] = 1990;
+		 seperatingValues[ARTIST_FAMILIARITY] = .5;
+		 seperatingValues[ARTIST_HOTNESS] = .5;
+		 seperatingValues[DURATION] = 300;
 
 		 System.out.println("Generating decision tree from train set...");
 		 decisionTree = new DecisionTree(train, attributeList, ARTIST_ID,
@@ -144,32 +144,28 @@ public class GUI implements ActionListener{
 		 System.out.println("Tree Structure");
 		 decisionTree.printTreeStructure();
 		 System.out.println("Finished printing tree structure");
-//		 System.out.println("Calculating accuracy againts test set.");
-//		 double hits = 0;
-//		 double accuracy = 0;
-//		 for(String[] tuple : test){
-//			 String[][] result = decisionTree.suggestItems(tuple);
-//			 
-//			 if(result != null){
-//				 for(String[] rTuple : result){
-//					 if(tuple[ARTIST_ID].equals(rTuple[ARTIST_ID])){
-//						 ++hits;
-//						 break;
-//					 }
-//				 }
-//			 }
-//			 else{
-//				 //ignoring misses due to attribute values in test 
-//				 //data set not being in the training set
-//				 ++hits;
-//			 }
-//			 
-//
-//		 }
-//		 
-//		 accuracy = hits/(double)test.length;
-//		 
-//		 System.out.println("Accuracy: " + accuracy);
+		 System.out.println("Calculating accuracy againts test set.");
+		 double hits = 0;
+		 double accuracy = 0;
+		 for(String[] tuple : test){
+			 String[][] result = decisionTree.suggestItems(tuple);
+			 
+			 if(result != null){
+				 
+				 for(String[] rTuple : result){
+					 if(tuple[ARTIST_ID].equals(rTuple[ARTIST_ID])){
+						 ++hits;
+						 break;
+					 }
+				 }
+				
+			 }
+			
+		 }
+		 
+		 accuracy = hits/(double)test.length;
+		 
+		 System.out.println("Accuracy: " + accuracy);
 		 
 
 		frame = new JFrame();
@@ -224,7 +220,7 @@ public class GUI implements ActionListener{
 
 		try {
 
-			String sql = "SELECT * " + "FROM complete " + "WHERE artist_name  LIKE '%"
+			String sql = "SELECT * " + "FROM songs_train " + "WHERE artist_name  LIKE '%"
 					+ enteredText + "%'";
 
 			
@@ -263,7 +259,7 @@ public class GUI implements ActionListener{
 		int selectedIndex = comboBox.getSelectedIndex();
 		
 		if(selectedIndex >= 0){
-			String sql = "SELECT * FROM complete  WHERE track_id = '" +  retrieveArray.get(selectedIndex) + "'";
+			String sql = "SELECT * FROM songs_train  WHERE track_id = '" +  retrieveArray.get(selectedIndex) + "'";
 
 			
 			try{
@@ -271,7 +267,7 @@ public class GUI implements ActionListener{
 				if(rs.next()){
 					origin[GENRE] = rs.getString("genre");
 					origin[YEAR] = rs.getString("year");
-					origin[ARTIST_HOTNESS] = rs.getString("artist_hotttnesss");
+					origin[ARTIST_HOTNESS] = rs.getString("artist_hotness");
 					origin[ARTIST_FAMILIARITY] = rs.getString("artist_familiarity");
 					origin[DURATION] = rs.getString("duration");
 					
