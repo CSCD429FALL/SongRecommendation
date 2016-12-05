@@ -1,9 +1,8 @@
 package decisionTree;
 
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
+
 
 /**
  * 
@@ -14,8 +13,6 @@ import java.util.Random;
 public class DecisionTree {
 
 	private Node<String[][]> root;
-	private String[][] D;
-	private HashMap<Integer, String> attributeList;
 	private boolean[] discreteValued;
 	double[] seperatingValues;
 	private final int classKey;
@@ -35,9 +32,8 @@ public class DecisionTree {
 	 */
 	public DecisionTree(String[][] D, HashMap<Integer, String> attributeList, int classKey, boolean[] discreteValued,
 			double[] seperatingValues) {
-		this.D = D;
+
 		this.classKey = classKey;
-		this.attributeList = attributeList;
 		this.discreteValued = discreteValued;
 		this.seperatingValues = seperatingValues;
 		root = generateDecisionTree(D, attributeList);
